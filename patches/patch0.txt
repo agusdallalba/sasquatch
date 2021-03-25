@@ -147,7 +147,7 @@ diff --strip-trailing-cr -NBbaur squashfs-tools/error.h squashfs-tools-patched/e
  
 -#ifdef SQUASHFS_TRACE
 +// CJH: Updated so that TRACE prints if -verbose is specified on the command line
-+int verbose;
++extern int verbose;
 +//#ifdef SQUASHFS_TRACE
  #define TRACE(s, args...) \
  		do { \
@@ -38312,7 +38312,7 @@ diff --strip-trailing-cr -NBbaur squashfs-tools/unsquashfs.c squashfs-tools-patc
  #include <sys/time.h>
  #include <sys/resource.h>
  #include <limits.h>
-@@ -44,13 +44,19 @@
+@@ -44,13 +44,22 @@
  pthread_mutex_t	fragment_mutex;
  
  /* user options that control parallelisation */
@@ -38334,6 +38334,9 @@ diff --strip-trailing-cr -NBbaur squashfs-tools/unsquashfs.c squashfs-tools-patc
 +// CJH: Initialize swap to -1
 +int bytes = 0, swap = -1, file_count = 0, dir_count = 0, sym_count = 0,
  	dev_count = 0, fifo_count = 0;
++// CJH: Initialize verbosity to FALSE
++int verbose = FALSE;
++
  char *inode_table = NULL, *directory_table = NULL;
  struct hash_table_entry *inode_table_hash[65536], *directory_table_hash[65536];
 @@ -701,8 +707,9 @@
@@ -38607,16 +38610,6 @@ diff --strip-trailing-cr -NBbaur squashfs-tools/unsquashfs.c squashfs-tools-patc
  
  		/*
  		 * block has been either successfully decompressed, or an error
-@@ -2505,6 +2606,9 @@
- 	int fragment_buffer_size = FRAGMENT_BUFFER_DEFAULT;
- 	int data_buffer_size = DATA_BUFFER_DEFAULT;
- 
-+    // CJH: Initialize verbosity to FALSE
-+    verbose = FALSE;
-+
- 	pthread_mutex_init(&screen_mutex, NULL);
- 	root_process = geteuid() == 0;
- 	if(root_process)
 @@ -2611,6 +2715,83 @@
  		} else if(strcmp(argv[i], "-regex") == 0 ||
  				strcmp(argv[i], "-r") == 0)
